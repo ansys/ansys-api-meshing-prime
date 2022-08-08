@@ -1,0 +1,4 @@
+setuptools>=42.0.0
+wheel
+ansys_tools_protoc_helper
+grpcio>=1.17.0,<1.47.0

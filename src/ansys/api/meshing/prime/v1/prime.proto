@@ -1,0 +1,53 @@
+// Copyright 2023 ANSYS, Inc.
+// Unauthorized use, distribution, or duplication is prohibited.
+
+// syntax
+syntax = "proto3";
+
+// options
+option optimize_for = SPEED;
+option cc_enable_arenas = true;
+
+// package
+package ansys.api.meshing.prime.v1;
+
+message Model {
+  int32 object_id = 1;
+}
+
+message MessageCompletionToken { }
+
+message StringJsonContent {
+  string data = 1;
+}
+
+message BinaryJsonContent {
+  bytes data = 1;
+}
+
+// The input containing the command to serve to PRIME.
+message StringMessage {
+  oneof messages {
+    Model model = 1;
+    StringJsonContent content = 2;
+    MessageCompletionToken completion_token = 3;
+  }
+}
+
+message BinaryMessage {
+  oneof messages {
+    Model model = 1;
+    BinaryJsonContent content = 2;
+    MessageCompletionToken completion_token = 3;
+  }
+}
+
+// Prime GRPC service definition.
+service Prime {
+  // Serves json command to Prime
+  rpc ServeJson (stream StringMessage) returns (stream StringMessage) {}
+  rpc GetParamDefaultJson (stream StringMessage) returns (stream StringMessage) {}
+  rpc RunOnServer (stream StringMessage) returns (stream StringMessage) {}
+  rpc ServeJsonBinary (stream BinaryMessage) returns (stream BinaryMessage) {}
+}
+
