@@ -29,7 +29,7 @@ if __name__ == '__main__':
         python_requires='>=3.7, <4',
         install_requires=[
             'grpcio>=1.26.0',  
-            'protobuf>=3.12.2, <4',  # minimum required based on latest ansys-grpc-mapdl]
+            'protobuf>=3.12.2, <4',  # minimum required based on meta-package
         ],
         packages=find_namespace_packages('src', include=('ansys.*',)),
         package_dir={'': 'src'},

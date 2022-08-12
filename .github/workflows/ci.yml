@@ -19,9 +19,7 @@ jobs:
         with:
           python-version: "3.7"
       - name: Install build requirements
-        run: |
-          python -m pip install -U pip
-          python -m pip install build
+        run: pip install build
       - name: Build api package
         run: |
           python -m build
