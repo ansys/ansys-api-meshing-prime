@@ -1,7 +1,9 @@
-# Prime gRPC Interface Package
+# Ansys Prime Server gRPC Interface Package
 
 This Python package contains the auto-generated gRPC Python interface files for
-Prime.
+Ansys Prime Server.  Contributions for this API will not be accepted.  Please
+create an issue or discussion for questions or enhancements relating to this
+project.
 
 ## Installation
 
