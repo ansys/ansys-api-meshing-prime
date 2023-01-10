@@ -45,7 +45,7 @@ jobs:
 
   validation:
     name: Package validation
-    needs: [ build ]
+    needs: [ smoke ]
     runs-on: ubuntu-latest
 
     steps:
