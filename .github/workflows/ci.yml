@@ -98,6 +98,7 @@ jobs:
       #   run: |
       #     pip install twine
       #     python -m twine upload --skip-existing ./**/*.whl
+      #     python -m twine upload --skip-existing ./**/*.tar.gz
       #   env:
       #     TWINE_USERNAME: PAT
       #     TWINE_PASSWORD: ${{ secrets.PYANSYS_PYPI_PRIVATE_PAT }}
@@ -107,6 +108,7 @@ jobs:
       #   run: |
       #     pip install twine
       #     twine upload --skip-existing ./**/*.whl
+      #     twine upload --skip-existing ./**/*.tar.gz
       #   env:
       #     TWINE_USERNAME: __token__
       #     TWINE_PASSWORD: ${{ secrets.TWINE_TOKEN }}
