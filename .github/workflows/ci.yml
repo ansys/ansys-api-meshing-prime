@@ -56,14 +56,14 @@ jobs:
           python-version: "3.9"
 
       - name: Build and Install Ansys Prime Server API package
-          run: |
-            pip install build
-            python -m build .
+        run: |
+          pip install build
+          python -m build .
 
       - name: Check package
-          run: |
-            pip install twine
-            twine check dist/*
+        run: |
+          pip install twine
+          twine check dist/*
 
       - name: Upload packages
         uses: actions/upload-artifact@v2
