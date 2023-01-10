@@ -56,6 +56,11 @@ jobs:
         with:
           python-version: "3.9"
 
+      - name: Check for pre-commit
+        run: |
+          pip install pre-commit
+          pre-commit run --all-files --show-diff-on-failure
+
       - name: Build and Install Ansys Prime Server API package
         run: |
           pip install build
