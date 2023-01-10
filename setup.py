@@ -5,6 +5,8 @@ import os
 from ansys.tools.protoc_helper import CMDCLASS_OVERRIDE
 
 HERE = os.path.abspath(os.path.dirname(__file__))
+with open(os.path.join(HERE, 'README.md')) as f:
+    long_description = f.read()
 
 product = 'meshing'
 library = 'prime'
@@ -24,6 +26,8 @@ if __name__ == '__main__':
         author='ANSYS, Inc.',
         author_email='support@ansys.com',
         description=description,
+        long_description=long_description,
+        long_description_content_type='text/markdown',
         url=f'https://github.com/ansys/{package_name}',
         license='MIT',
         python_requires='>=3.7, <4',
