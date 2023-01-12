@@ -13,7 +13,7 @@ message Model {
   int32 object_id = 1;
 }
 
-message MessageCompletionToken { }
+message MessageCompletionToken {}
 
 message StringJsonContent {
   string data = 1;
@@ -43,9 +43,8 @@ message BinaryMessage {
 // Prime GRPC service definition.
 service Prime {
   // Serves json command to Prime
-  rpc ServeJson (stream StringMessage) returns (stream StringMessage) {}
-  rpc GetParamDefaultJson (stream StringMessage) returns (stream StringMessage) {}
-  rpc RunOnServer (stream StringMessage) returns (stream StringMessage) {}
-  rpc ServeJsonBinary (stream BinaryMessage) returns (stream BinaryMessage) {}
+  rpc ServeJson(stream StringMessage) returns (stream StringMessage) {}
+  rpc GetParamDefaultJson(stream StringMessage) returns (stream StringMessage) {}
+  rpc RunOnServer(stream StringMessage) returns (stream StringMessage) {}
+  rpc ServeJsonBinary(stream BinaryMessage) returns (stream BinaryMessage) {}
 }
-

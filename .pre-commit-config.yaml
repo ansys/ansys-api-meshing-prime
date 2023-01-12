@@ -1,0 +1,13 @@
+repos:
+
+- repo: https://github.com/pre-commit/mirrors-clang-format
+  rev: v14.0.1
+  hooks:
+  - id: clang-format
+    files: ^.+.proto$
+    args: [ -i, -style=file ]
+
+- repo: https://github.com/codespell-project/codespell
+  rev: v2.1.0
+  hooks:
+  - id: codespell

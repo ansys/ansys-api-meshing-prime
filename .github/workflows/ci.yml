@@ -16,51 +16,27 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  smoke:
+  build:
     name: Build package
-
-    strategy:
-      fail-fast: false
-      matrix: 
-        os: [ windows-latest, ubuntu-latest ]
-        python-version: [ "3.7", "3.8", "3.9" ]
-
-    runs-on: ${{ matrix.os }}
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-      
-      - name: Build api package
-        run: |
-          pip install .
-
-      - name: Test package
-        run: |
-          python -c "import ansys.api.meshing.prime; print('Succesfully imported ansys.api.meshing.prime')"
-          python -c "from ansys.api.meshing.prime import __version__; print(__version__)"
-
-  validation:
-    name: Package validation
-    needs: [ smoke ]
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
 
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.9"
+          python-version: "3.7"
+      
+      - name: Check for pre-commit
+        run: |
+          pip install pre-commit
+          pre-commit run --all-files --show-diff-on-failure
 
       - name: Build and Install Ansys Prime Server API package
         run: |
           pip install build
           python -m build .
-
+      
       - name: Check package
         run: |
           pip install twine
@@ -72,39 +48,72 @@ jobs:
           name: ansys-api-meshing-prime
           path: dist/
           retention-days: 7
-  
+
+  smoke:
+    name: Smoke test package
+    needs: [ build ]
+    strategy:
+      fail-fast: false
+      matrix: 
+        os: [ windows-latest, ubuntu-latest ]
+        python-version: [ "3.7", "3.8", "3.9", "3.10", "3.11" ]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      
+      - uses: actions/download-artifact@v3
+        with:
+          name: ansys-api-meshing-prime
+          path: dist
+      
+      - name: Install package
+        run: |
+          pip install ansys-api-meshing-prime --find-links dist
+
+      - name: Test package
+        run: |
+          python -c "import ansys.api.meshing.prime; print('Succesfully imported ansys.api.meshing.prime')"
+          python -c "from ansys.api.meshing.prime import __version__; print(__version__)"
+
   release:
     name: Release the API package
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags')
-    needs: [ validation ]
+    needs: [ smoke ]
     runs-on: ubuntu-latest
     steps:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.9"
+          python-version: "3.7"
 
       - uses: actions/download-artifact@v3
 
       - name: Display structure of downloaded files
         run: ls -R
 
-      # - name: Upload to Private PyPi
-      #   run: |
-      #     pip install twine
-      #     python -m twine upload --skip-existing ./**/*.whl
-      #   env:
-      #     TWINE_USERNAME: PAT
-      #     TWINE_PASSWORD: ${{ secrets.PYANSYS_PYPI_PRIVATE_PAT }}
-      #     TWINE_REPOSITORY_URL: https://pkgs.dev.azure.com/pyansys/_packaging/pyansys/pypi/upload
+      - name: Upload to Private PyPi
+        run: |
+          pip install twine
+          python -m twine upload --skip-existing ./**/*.whl
+          python -m twine upload --skip-existing ./**/*.tar.gz
+        env:
+          TWINE_USERNAME: PAT
+          TWINE_PASSWORD: ${{ secrets.PYANSYS_PYPI_PRIVATE_PAT }}
+          TWINE_REPOSITORY_URL: https://pkgs.dev.azure.com/pyansys/_packaging/pyansys/pypi/upload
 
-      # - name: Upload to Public PyPi
-      #   run: |
-      #     pip install twine
-      #     twine upload --skip-existing ./**/*.whl
-      #   env:
-      #     TWINE_USERNAME: __token__
-      #     TWINE_PASSWORD: ${{ secrets.TWINE_TOKEN }}
+      - name: Upload to Public PyPi
+        run: |
+          pip install twine
+          twine upload --skip-existing ./**/*.whl
+          twine upload --skip-existing ./**/*.tar.gz
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.TWINE_TOKEN }}
 
       - name: Release
         uses: softprops/action-gh-release@v1
