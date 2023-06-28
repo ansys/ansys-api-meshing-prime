@@ -42,7 +42,7 @@ message BinaryMessage {
   }
 }
 
-message InitializeRequest { }
+message InitializeRequest {}
 
 message InitializeResponse {
   string data = 1;
@@ -51,9 +51,9 @@ message InitializeResponse {
 // Prime GRPC service definition.
 service Prime {
   // Serves json command to Prime
-  rpc ServeJson (stream StringMessage) returns (stream StringMessage) {}
-  rpc GetParamDefaultJson (stream StringMessage) returns (stream StringMessage) {}
-  rpc RunOnServer (stream StringMessage) returns (stream StringMessage) {}
-  rpc ServeJsonBinary (stream BinaryMessage) returns (stream BinaryMessage) {}
+  rpc ServeJson(stream StringMessage) returns (stream StringMessage) {}
+  rpc GetParamDefaultJson(stream StringMessage) returns (stream StringMessage) {}
+  rpc RunOnServer(stream StringMessage) returns (stream StringMessage) {}
+  rpc ServeJsonBinary(stream BinaryMessage) returns (stream BinaryMessage) {}
   rpc Initialize(InitializeRequest) returns (InitializeResponse) {}
 }
