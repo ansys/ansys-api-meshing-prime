@@ -10,49 +10,27 @@ on:
       - "v*"
     branches:
       - main
+env:
+  MAIN_PYTHON_VERSION : '3.10'
+  LIBRARY_NAME: 'ansys-api-dyna'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  build:
-    name: Build package
+  build-library:
+    name: "Build library"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Setup Python
-        uses: actions/setup-python@v4
+      - uses: ansys/actions/build-library@v4
         with:
-          python-version: "3.10"
-      
-      - name: Check for pre-commit
-        run: |
-          pip install pre-commit
-          pre-commit run --all-files --show-diff-on-failure
-
-      - name: Build and Install Ansys Prime Server API package
-        run: |
-          pip install build
-          python -m build .
-      
-      - name: Check package
-        run: |
-          pip install twine
-          twine check dist/*
-
-      - name: Upload packages
-        uses: actions/upload-artifact@v3
-        with:
-          name: ansys-api-meshing-prime
-          path: dist/
-          retention-days: 7
+          library-name: ${{ env.LIBRARY_NAME }}
 
   smoke-tests:
     name: Build and Smoke tests
     runs-on: ${{ matrix.os }}
-    needs: [build]
+    needs: [build-library]
     strategy:
       fail-fast: false
       matrix:
@@ -63,6 +41,7 @@ jobs:
         exclude:
           - should-release: false
             os: macos-latest
+
     steps:
       - name: Build wheelhouse and perform smoke test
         uses: ansys/actions/build-wheelhouse@v4
