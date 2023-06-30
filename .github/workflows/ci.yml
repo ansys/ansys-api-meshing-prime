@@ -49,76 +49,43 @@ jobs:
           path: dist/
           retention-days: 7
 
-  smoke:
-    name: Smoke test package
-    needs: [ build ]
+  smoke-tests:
+    name: Build and Smoke tests
+    runs-on: ${{ matrix.os }}
+    needs: [build]
     strategy:
       fail-fast: false
-      matrix: 
-        os: [ windows-latest, ubuntu-latest ]
-        python-version: [ "3.7", "3.8", "3.9", "3.10", "3.11" ]
-
-    runs-on: ${{ matrix.os }}
-
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ['3.8', '3.9', '3.10', '3.11']
+        should-release:
+          - ${{ github.event_name == 'push' && contains(github.ref, 'refs/tags') }}
+        exclude:
+          - should-release: false
+            os: macos-latest
     steps:
-      - name: Setup Python
-        uses: actions/setup-python@v4
+      - name: Build wheelhouse and perform smoke test
+        uses: ansys/actions/build-wheelhouse@v4
         with:
+          library-name: ${{ env.PACKAGE_NAME }}
+          library-namespace: ${{ env.PACKAGE_NAMESPACE }}
+          operating-system: ${{ matrix.os }}
           python-version: ${{ matrix.python-version }}
-      
-      - uses: actions/download-artifact@v3
-        with:
-          name: ansys-api-meshing-prime
-          path: dist
-      
-      - name: Install package
-        run: |
-          pip install ansys-api-meshing-prime --find-links dist
-
-      - name: Test package
-        run: |
-          python -c "import ansys.api.meshing.prime; print('Succesfully imported ansys.api.meshing.prime')"
-          python -c "from ansys.api.meshing.prime import __version__; print(__version__)"
 
   release:
-    name: Release the API package
-    if: github.event_name == 'push' && contains(github.ref, 'refs/tags')
-    needs: [ smoke ]
+    name: Release project
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    needs: [package]
     runs-on: ubuntu-latest
     steps:
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - name: Release to the public PyPI repository
+        uses: ansys/actions/release-pypi-public@v4
         with:
-          python-version: "3.7"
+          library-name: ${{ env.PACKAGE_NAME }}
+          twine-username: "__token__"
+          twine-token: ${{ secrets.PYPI_TOKEN }}
 
-      - uses: actions/download-artifact@v3
-
-      - name: Display structure of downloaded files
-        run: ls -R
-
-      # - name: Upload to Private PyPi
-      #   run: |
-      #     pip install twine
-      #     python -m twine upload --skip-existing ./**/*.whl
-      #     python -m twine upload --skip-existing ./**/*.tar.gz
-      #   env:
-      #     TWINE_USERNAME: PAT
-      #     TWINE_PASSWORD: ${{ secrets.PYANSYS_PYPI_PRIVATE_PAT }}
-      #     TWINE_REPOSITORY_URL: https://pkgs.dev.azure.com/pyansys/_packaging/pyansys/pypi/upload
-
-      - name: Upload to Public PyPi
-        run: |
-          pip install twine
-          twine upload --skip-existing ./**/*.whl
-          twine upload --skip-existing ./**/*.tar.gz
-        env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.TWINE_TOKEN }}
-
-      - name: Release
-        uses: softprops/action-gh-release@v1
+      - name: Release to GitHub
+        uses: ansys/actions/release-github@v4
         with:
-          generate_release_notes: true
-          files: |
-            ./**/*.whl
-            ./**/*.tar.gz
+          library-name: ${{ env.PACKAGE_NAME }}
