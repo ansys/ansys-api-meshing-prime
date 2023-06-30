@@ -14,7 +14,7 @@ env:
   LIBRARY_NAMESPACE: 'ansys.api.meshing.prime'
 
 concurrency:
-  group: {{ '${{ github.workflow }}-${{ github.ref }}' }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -30,7 +30,7 @@ jobs:
       - name: "Setup Python"
         uses: actions/setup-python@v4
         with:
-          python-version: {{ '${{ env.MAIN_PYTHON_VERSION }}' }}
+          python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
       - name: "Install the library"
         run: |
@@ -47,7 +47,7 @@ jobs:
     steps:
       - uses: ansys/actions/build-library@v4
         with:
-          library-name: {{ '${{ env.LIBRARY_NAME }}' }}
+          library-name: ${{ env.LIBRARY_NAME }}
 
   release:
     name: "Release library"
@@ -59,14 +59,14 @@ jobs:
       - name: "Release to the private PyPI"
         uses: ansys/actions/release-pypi-private@v4
         with:
-          library-name: {{ '${{ env.LIBRARY_NAME }}' }}
+          library-name: ${{ env.LIBRARY_NAME }}
           twine-username: "__token__"
-          twine-token: {{ '${{ secrets.PYANSYS_PYPI_PRIVATE_PAT }}' }}
+          twine-token: ${{ secrets.PYANSYS_PYPI_PRIVATE_PAT }}
 
       - name: "Release to GitHub"
         uses: softprops/action-gh-release@v1
         with:
           generate_release_notes: true
           files: |
-            {{ '${{ env.LIBRARY_NAME }}-artifacts/*.whl }}' }}
-            {{ '${{ env.LIBRARY_NAME }}-artifacts/*.tar.gz' }}
+            ${{ env.LIBRARY_NAME }}-artifacts/*.whl }}
+            ${{ env.LIBRARY_NAME }}-artifacts/*.tar.gz
