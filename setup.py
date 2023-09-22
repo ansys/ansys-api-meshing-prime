@@ -32,8 +32,8 @@ if __name__ == '__main__':
         license='MIT',
         python_requires='>=3.8, <4',
         install_requires=[
-            'grpcio>=1.26.0',  
-            'protobuf>=3.12.2, <5',  # minimum required based on meta-package
+            'grpcio~=1.46',  
+            'protobuf~=3.19',  # minimum required based on meta-package
         ],
         packages=find_namespace_packages('src', include=('ansys.*',)),
         package_dir={'': 'src'},
