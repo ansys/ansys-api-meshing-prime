@@ -28,8 +28,9 @@ along with the wheel containing the protofiles and build Python interface
 files.
 
 Note that the interface files are identical regardless of the version of Python
-used to generate them, but the last pre-built wheel was Python 3.7, so to
-improve your build time, use Python 3.7 when building the wheel.
+used to generate them, but the last pre-built wheel for `grpcio~=1.46` was
+Python 3.10, so to improve your build time, use Python 3.10 when building the
+wheel.
 
 ## Manual Deployment
 
