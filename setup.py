@@ -33,7 +33,7 @@ if __name__ == '__main__':
         python_requires='>=3.8, <4',
         install_requires=[
             'grpcio~=1.46',  
-            'protobuf~=3.19',  # minimum required based on meta-package
+            'protobuf>=3.19,<5',  # minimum required based on meta-package
         ],
         packages=find_namespace_packages('src', include=('ansys.*',)),
         package_dir={'': 'src'},
