@@ -45,7 +45,7 @@ jobs:
     needs: tests
     runs-on: ubuntu-latest
     steps:
-      - uses: ansys/actions/build-library@v5
+      - uses: ansys/actions/build-library@v6
         with:
           library-name: ${{ env.LIBRARY_NAME }}
 
@@ -56,7 +56,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Release to the public PyPI"
-        uses: ansys/actions/release-pypi-public@v5
+        uses: ansys/actions/release-pypi-public@v6
         with:
           library-name: ${{ env.LIBRARY_NAME }}
           twine-username: "__token__"
