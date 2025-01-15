@@ -21,6 +21,3 @@ version_info = 0, 1, 4
 # Nice string for the version
 __version__ = '.'.join(map(str, version_info))
 
-# Write the version string to a file
-with open('VERSION', 'w') as version_file:
-    version_file.write(__version__)
