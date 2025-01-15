@@ -14,7 +14,7 @@ library = 'prime'
 package_info = ['ansys', 'api', product, library]
 
 __version__ = None
-version_file = os.path.join(HERE, 'ansys', 'api', 'meshing', 'prime', '_version.py')
+version_file = os.path.join(HERE, 'src', 'ansys', 'api', 'meshing', 'prime', '_version.py')
 with io_open(version_file, mode='r') as fd:
     exec(fd.read())
 
