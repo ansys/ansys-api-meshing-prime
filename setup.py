@@ -42,7 +42,7 @@ if __name__ == '__main__':
         packages=find_namespace_packages('src', include=('ansys.*',)),
         package_dir={'': 'src'},
         package_data={
-            '': [ '*.proto', '*.pyi', 'py.typed', 'VERSION' ]
+            '': [ '*.proto', '*.pyi', 'py.typed' ]
         },
         entry_points={
             'ansys.tools.protoc_helper.proto_provider': [
