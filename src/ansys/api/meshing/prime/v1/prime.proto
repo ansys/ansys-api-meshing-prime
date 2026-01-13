@@ -63,4 +63,5 @@ service Prime {
   rpc ServeJsonBinary(stream BinaryMessage) returns (stream BinaryMessage) {}
   rpc Initialize(InitializeRequest) returns (InitializeResponse) {}
   rpc ServerCommand(stream StringMessage) returns (stream StringMessage) {}
+  rpc Finalize(FinalizeRequest) returns (FinalizeResponse) {}
 }
