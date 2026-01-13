@@ -48,6 +48,12 @@ message InitializeResponse {
   string data = 1;
 }
 
+message FinalizeRequest {}
+
+message FinalizeResponse {
+  string data = 1;
+}
+
 // Prime GRPC service definition.
 service Prime {
   // Serves json command to Prime
