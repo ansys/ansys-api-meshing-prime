@@ -11,12 +11,12 @@ Print the version
 
 >>> from ansys.product import library
 >>> print(library.__version__)
-0.1.5.dev1
+0.2.0
 
 """
 
 # major, minor, patch
-version_info = 0, 1, 5
+version_info = 0, 2, 0
 
 # Nice string for the version
 __version__ = '.'.join(map(str, version_info))
