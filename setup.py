@@ -37,7 +37,7 @@ if __name__ == '__main__':
         python_requires='>=3.10, <4',
         install_requires=[
             'grpcio~=1.46',  
-            'protobuf>=3.19,<7',
+            'protobuf>=3.19,<8',
         ],
         packages=find_namespace_packages('src', include=('ansys.*',)),
         package_dir={'': 'src'},
